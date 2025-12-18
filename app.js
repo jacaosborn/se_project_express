@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const indexRouter = require("./routes/index");
+const NOT_FOUND = require("./utils/errors");
 
 const app = express();
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
@@ -16,7 +17,7 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 app.use((req, res) => {
-  res.status(404).send({
+  res.status(NOT_FOUND).send({
     message: "Requested resource not found",
   });
 });

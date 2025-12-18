@@ -1,4 +1,4 @@
-const Item = require("../models/clothingItem");
+const ClothingItem = require("../models/clothingItem");
 const {
   BAD_REQUEST,
   NOT_FOUND,
@@ -6,14 +6,14 @@ const {
 } = require("../utils/errors");
 
 const getItems = (req, res) => {
-  Item.find({})
+  ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" }));
 };
 
 const getItem = (req, res) => {
   const { itemId } = req.params;
-  Item.findById(itemId)
+  ClothingItem.findById(itemId)
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
@@ -31,7 +31,7 @@ const getItem = (req, res) => {
 const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
-  Item.create({ name, weather, imageUrl, owner })
+  ClothingItem.create({ name, weather, imageUrl, owner })
     .then((item) => res.status(201).send({ data: item }))
     .catch((err) => {
       console.error(err);
@@ -44,7 +44,7 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  Item.findByIdAndDelete(itemId)
+  ClothingItem.findByIdAndDelete(itemId)
     .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => {
@@ -60,7 +60,7 @@ const deleteItem = (req, res) => {
 };
 
 const likeItem = (req, res) => {
-  Item.findByIdAndUpdate(
+  ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } },
     { new: true }
@@ -80,7 +80,7 @@ const likeItem = (req, res) => {
 };
 
 const unlikeItem = (req, res) => {
-  Item.findByIdAndUpdate(
+  ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } },
     { new: true }
