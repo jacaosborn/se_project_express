@@ -20,7 +20,8 @@ const getItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Bad request" });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
@@ -50,7 +51,8 @@ const deleteItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Bad request" });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
@@ -69,7 +71,8 @@ const likeItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(BAD_REQUEST).send({ message: "Bad request" });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
@@ -88,10 +91,9 @@ const unlikeItem = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
-      } else {
-        if (err.name === "CastError") {
-          return res.status(BAD_REQUEST).send({ message: "Bad request" });
-        }
+      }
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Bad request" });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
     });

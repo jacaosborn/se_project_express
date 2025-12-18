@@ -1,4 +1,3 @@
-const { get } = require("mongoose");
 const User = require("../models/user");
 const {
   BAD_REQUEST,
@@ -21,10 +20,9 @@ const getUser = (req, res) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
-      } else {
-        if (err.name === "CastError") {
-          return res.status(BAD_REQUEST).send({ message: "Bad request" });
-        }
+      }
+      if (err.name === "CastError") {
+        return res.status(BAD_REQUEST).send({ message: "Bad request" });
       }
       return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
     });
@@ -39,7 +37,7 @@ const createUser = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: "Validation error" });
       }
-      res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
     });
 };
 
