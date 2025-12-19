@@ -8,7 +8,11 @@ const {
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" }));
+    .catch(() =>
+      res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." })
+    );
 };
 
 const getItem = (req, res) => {
@@ -22,9 +26,11 @@ const getItem = (req, res) => {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Bad request" });
+        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
@@ -36,9 +42,11 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: "Validation error" });
+        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message: "Error" });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
