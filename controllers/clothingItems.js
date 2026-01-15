@@ -51,31 +51,34 @@ const createItem = (req, res) => {
     });
 };
 
-const deleteItem = (req, res) => {
+const deleteItem = async (req, res) => {
   const { itemId } = req.params;
-  const owner = req.user._id;
-  ClothingItem.findByIdAndDelete(itemId)
-    .orFail()
-    .then((item) => {
-      if (owner != item.owner) {
-        return res
-          .status(REQUEST_REFUSED)
-          .send({ message: "You cannot delete this item" });
-      }
-      res.status(200).send({ data: item });
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "Item not found" });
-      }
-      if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
-      }
+  const userId = req.user._id;
+
+  try {
+    const item = await ClothingItem.findById(itemId).orFail();
+    if (!item.owner.equals(userId)) {
       return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
-    });
+        .status(REQUEST_REFUSED)
+        .send({ message: "You cannot delete this item" });
+    }
+    await ClothingItem.findByIdAndDelete(itemId).orFail();
+
+    return res.status(200).send({ message: "Item successfully deleted" });
+  } catch (err) {
+    console.error(err);
+
+    if (err.name === "DocumentNotFoundError") {
+      return res.status(NOT_FOUND).send({ message: "Item not found" });
+    }
+    if (err.name === "CastError") {
+      return res.status(BAD_REQUEST).send({ message: "Invalid data" });
+    }
+
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .send({ message: "An error has occurred on the server." });
+  }
 };
 
 const likeItem = (req, res) => {

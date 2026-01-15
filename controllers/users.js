@@ -4,6 +4,7 @@ const {
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
   USER_EXISTS,
+  UNAUTHORIZED,
 } = require("../utils/errors");
 const bcrypt = require("bcryptjs");
 const JWT_SECRET = require("../utils/config");
@@ -21,7 +22,7 @@ const getUsers = (req, res) => {
 
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;
-  console.log("running");
+
   User.findById(userId)
     .orFail()
     .then((user) => res.status(200).send(user))
@@ -65,6 +66,9 @@ const createUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+  if (email == "" || password == "") {
+    Promise.reject(new Error(BAD_REQUEST));
+  }
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -75,7 +79,7 @@ const login = (req, res) => {
 
     .catch((err) => {
       console.error(err);
-      return res.status(BAD_REQUEST).send({ message: "Login failed" });
+      return res.status(UNAUTHORIZED).send({ message: "Login failed" });
     });
 };
 
@@ -85,6 +89,7 @@ const updateUser = (req, res) => {
   const update = { name, avatar };
   User.findOneAndUpdate(filter, update, {
     new: true,
+    runValidators: true,
   })
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
