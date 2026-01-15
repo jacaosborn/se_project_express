@@ -3,6 +3,7 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
+  REQUEST_REFUSED,
 } = require("../utils/errors");
 
 const getItems = (req, res) => {
@@ -52,9 +53,17 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
+  const owner = req.user._id;
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(200).send({ data: item }))
+    .then((item) => {
+      if (owner != item.owner) {
+        return res
+          .status(REQUEST_REFUSED)
+          .send({ message: "You cannot delete this item" });
+      }
+      res.status(200).send({ data: item });
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {

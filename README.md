@@ -4,4 +4,5 @@ The back end of the WTWR App. This project sets up server functionality for the 
 
 ## Video
 
-Overview: https://www.loom.com/share/8d4d5022fa5f45899d7e99279162371c
+Front-end Overview: https://www.loom.com/share/8d4d5022fa5f45899d7e99279162371c
+Database setup proof: https://www.loom.com/share/e6ff4d032cfd44218edace0e6815e2b0
