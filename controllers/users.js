@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
 const User = require("../models/user");
 const {
   BAD_REQUEST,
@@ -6,9 +9,8 @@ const {
   USER_EXISTS,
   UNAUTHORIZED,
 } = require("../utils/errors");
-const bcrypt = require("bcryptjs");
+
 const JWT_SECRET = require("../utils/config");
-const jwt = require("jsonwebtoken");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -55,7 +57,8 @@ const createUser = (req, res) => {
       console.error(err);
       if (err.code === 11000) {
         return res.status(USER_EXISTS).send({ message: "User already exists" });
-      } else if (err.name === "ValidationError") {
+      }
+      if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid data" });
       }
       return res
@@ -66,7 +69,7 @@ const createUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  if (email == "" || password == "") {
+  if (email === "" || password === "") {
     Promise.reject(new Error(BAD_REQUEST));
   }
   return User.findUserByCredentials(email, password)
@@ -96,7 +99,8 @@ const updateUser = (req, res) => {
       console.error(err);
       if (err.code === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
-      } else if (err.name === "ValidationError") {
+      }
+      if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: "Invalid data" });
       }
       return res
