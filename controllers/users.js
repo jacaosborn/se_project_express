@@ -88,9 +88,9 @@ const login = (req, res) => {
 
 const updateUser = (req, res) => {
   const { name, avatar } = req.body;
-  const { filter } = req.user._id;
+  const { userId } = req.user._id;
   const update = { name, avatar };
-  User.findOneAndUpdate(filter, update, {
+  User.findOneAndUpdate(userId, update, {
     new: true,
     runValidators: true,
   })
