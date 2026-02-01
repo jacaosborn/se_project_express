@@ -43,15 +43,18 @@ const getCurrentUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar, email, password } = req.body;
+  const { name, avatarUrl, email, password } = req.body;
 
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({ name, avatar, email, password: hash }))
+    .then((hash) => User.create({ name, avatarUrl, email, password: hash }))
 
     .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
       const { password, ...userData } = user._doc;
-      res.status(201).send({ data: userData });
+      res.status(201).send({ token, user: userData });
     })
     .catch((err) => {
       console.error(err);
@@ -77,7 +80,8 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.send({ token });
+      const { password, ...userData } = user._doc;
+      res.send({ token, user: userData });
     })
 
     .catch((err) => {
@@ -87,14 +91,14 @@ const login = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const { name, avatar } = req.body;
-  const { userId } = req.user._id;
-  const update = { name, avatar };
-  User.findOneAndUpdate(userId, update, {
+  const { name, avatarUrl } = req.body;
+  const userId = req.user._id;
+  const update = { name, avatarUrl };
+  User.findByIdAndUpdate(userId, update, {
     new: true,
     runValidators: true,
   })
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
       if (err.code === "DocumentNotFoundError") {

@@ -9,10 +9,13 @@ const app = express();
 app.use(cors());
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
-  .then(() => {})
+  .then(() => {
+    console.log("connected to mongoDB");
+  })
   .catch(console.error);
 
 const { PORT = 3001 } = process.env;
+console.log(`connected to port ${PORT}`);
 app.use(express.json());
 
 app.use("/", indexRouter);
