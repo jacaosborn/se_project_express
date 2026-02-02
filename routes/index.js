@@ -7,6 +7,6 @@ const auth = require("../middlewares/auth");
 router.use("/items", clothingItemRouter);
 
 router.use("/users", userRouter);
-router.post("/login", login);
+router.post("/signin", login);
 router.post("/signup", createUser);
 module.exports = router;

@@ -43,11 +43,11 @@ const getCurrentUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatarUrl, email, password } = req.body;
+  const { name, avatar, email, password } = req.body;
 
   bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({ name, avatarUrl, email, password: hash }))
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
 
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -91,9 +91,9 @@ const login = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const { name, avatarUrl } = req.body;
+  const { name, avatar } = req.body;
   const userId = req.user._id;
-  const update = { name, avatarUrl };
+  const update = { name, avatar };
   User.findByIdAndUpdate(userId, update, {
     new: true,
     runValidators: true,
