@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/jacaosborn/se_project_express/issues"
   },
-  "homepage": "https://github.com/jacaosborn/se_project_express#readme",
+  "homepage": "https://jayswtwr.cyberbear.io",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",

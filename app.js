@@ -23,6 +23,11 @@ console.log(`connected to port ${PORT}`);
 app.use(express.json());
 
 app.use(requestLogger);
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 app.use("/", indexRouter);
 app.use((req, res) => {
   res.status(NOT_FOUND).send({
