@@ -2,9 +2,10 @@
 
 The back end of the WTWR App. This project sets up server functionality for the WTWR clothing app and uses Express, MongoDB, Mongoose, ESLint/Prettier, and Nodemon. Postman was used for testing during development.
 
-# Project URL
+# Project URLs
 
 The deployed project can be found at www.jayswtwr.cyberbear.io
+The front end repository can be found at https://github.com/jacaosborn/se_project_react
 
 ## Video
 
