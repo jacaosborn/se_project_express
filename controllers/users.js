@@ -2,12 +2,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
-const {
-  BadRequestError,
-  UnauthorizedError,
-  NotFoundError,
-  ConflictError,
-} = require("../utils/errors");
+const NotFoundError = require("../utils/NotFoundError");
+const BadRequestError = require("../utils/BadRequestError");
+const UnauthorizedError = require("../utils/UnauthorizedError");
+const ConflictError = require("../utils/ConflictError");
 
 const JWT_SECRET = require("../utils/config");
 
@@ -31,7 +29,7 @@ const getCurrentUser = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new BadRequestError("Invalid user ID"));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -45,7 +43,7 @@ const createUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      const { password, ...userData } = user._doc;
+      const { password: userPassword, ...userData } = user.toObject();
       res.status(201).send({ token, user: userData });
     })
     .catch((err) => {
@@ -56,7 +54,7 @@ const createUser = (req, res, next) => {
       if (err.name === "ValidationError") {
         return next(new BadRequestError("Invalid data"));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -70,7 +68,7 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      const { password, ...userData } = user._doc;
+      const { password: userPassword, ...userData } = user.toObject();
       res.send({ token, user: userData });
     })
     .catch((err) => {
@@ -96,10 +94,8 @@ const updateUser = (req, res, next) => {
       if (err.name === "ValidationError") {
         return next(new BadRequestError("Invalid data"));
       }
-      next(err);
+      return next(err);
     });
 };
-
-module.exports = { getUsers, getCurrentUser, createUser, login, updateUser };
 
 module.exports = { getUsers, getCurrentUser, createUser, login, updateUser };

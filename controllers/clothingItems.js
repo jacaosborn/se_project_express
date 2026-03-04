@@ -1,9 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
-const {
-  BadRequestError,
-  NotFoundError,
-  ForbiddenError,
-} = require("../utils/errors");
+const NotFoundError = require("../utils/NotFoundError");
+const BadRequestError = require("../utils/BadRequestError");
+const ForbiddenError = require("../utils/ForbiddenError");
 
 const getItems = (req, res, next) => {
   ClothingItem.find({})
@@ -24,7 +22,7 @@ const getItem = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new BadRequestError("Invalid item ID"));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -64,7 +62,7 @@ const deleteItem = async (req, res, next) => {
       return next(new BadRequestError("Invalid item ID"));
     }
 
-    next(err);
+    return next(err);
   }
 };
 
@@ -84,7 +82,7 @@ const likeItem = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new BadRequestError("Invalid item ID"));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -104,7 +102,7 @@ const unlikeItem = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new BadRequestError("Invalid item ID"));
       }
-      next(err);
+      return next(err);
     });
 };
 
