@@ -10,7 +10,7 @@ const auth = (req, res, next) => {
     return next(new UnauthorizedError("Authorization required"));
   }
 
-  const token = authorization.replace("Bearer ", "");
+  const token = req.headers.authorization?.replace("Bearer ", "");
 
   let payload;
 

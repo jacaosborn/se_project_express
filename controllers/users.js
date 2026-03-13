@@ -44,7 +44,7 @@ const createUser = (req, res, next) => {
         expiresIn: "7d",
       });
       const { password: userPassword, ...userData } = user.toObject();
-      res.status(201).send({ token, user: userData });
+      res.status(201).send(userData);
     })
     .catch((err) => {
       console.error(err);
@@ -60,7 +60,7 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  if (email === "" || password === "") {
+  if (!email || !password) {
     return next(new BadRequestError("Email and password are required"));
   }
   return User.findUserByCredentials(email, password)
